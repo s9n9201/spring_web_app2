@@ -1,4 +1,4 @@
-package web.charmi;
+package web.charmi.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import web.charmi.entity.Task;

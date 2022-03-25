@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import web.charmi.PurchassRowMapper;
+import web.charmi.rowmapper.PurchassRowMapper;
 import web.charmi.entity.Purchass;
 import web.charmi.util.Date;
 import web.charmi.util.SqlMap;
