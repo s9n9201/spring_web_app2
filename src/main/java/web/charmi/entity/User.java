@@ -3,6 +3,7 @@ package web.charmi.entity;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class User {
 
@@ -16,6 +17,16 @@ public class User {
     private String Email;
     @NotBlank
     private String Password;
+
+    private List<Role> roleList;
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList=roleList;
+    }
 
     public Integer getOrgId() {
         return OrgId;
