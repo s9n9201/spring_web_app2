@@ -5,6 +5,9 @@ public class Role {
     private Integer RRecId;
     private enumRole name;
 
+    public Role() {
+
+    }
     public Role(enumRole name) {
         this.name=name;
     }
