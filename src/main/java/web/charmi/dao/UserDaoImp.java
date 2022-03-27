@@ -13,6 +13,7 @@ import web.charmi.util.SqlMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class UserDaoImp implements UserDao {
     @Autowired
@@ -61,7 +62,7 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public User getUser(String Value, String Column) {
+    public Optional<User> getUser(String Value, String Column) {
         String SqlStr="";
         Map<String, String> map=new HashMap<>();
         SqlStr="select top 1 * from Org where "+Column+"=:"+Column+" order by OrgId ";
@@ -69,7 +70,7 @@ public class UserDaoImp implements UserDao {
 
         List<User> userList=jdbcTemplate.query(SqlStr, map, new UserRowMapper());
         if (userList.size()>0) {
-            return userList.get(0);
+            return Optional.of(userList.get(0));
         }
         return null;
     }
