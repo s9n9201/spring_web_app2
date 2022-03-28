@@ -3,6 +3,7 @@ package web.charmi.entity;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 import java.util.List;
 
 public class User {
@@ -11,9 +12,9 @@ public class User {
     @NotBlank
     @Size(max=20)
     private String OrgName;
-    @NotBlank
-    @Size(max=50)
-    @Email
+    @NotBlank(groups=signUp.class)
+    @Size(max=50, groups=signUp.class)
+    @Email(groups=signUp.class)
     private String Email;
     @NotBlank
     private String Password;
@@ -59,4 +60,7 @@ public class User {
     public void setPassword(String password) {
         Password=password;
     }
+
+    public interface signIn extends Default {}
+    public interface signUp extends Default {}
 }
