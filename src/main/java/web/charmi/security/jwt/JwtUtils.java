@@ -14,7 +14,7 @@ public class JwtUtils {
     private static final Logger log=LoggerFactory.getLogger(JwtUtils.class);
     @Value("${webcharmi.app.jwtSecret}")
     private String jwtSecret;
-    @Value("${jwtExpiration}")
+    @Value("${webcharmi.app.jwtExpiration}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
