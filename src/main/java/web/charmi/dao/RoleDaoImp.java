@@ -2,6 +2,7 @@ package web.charmi.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 import web.charmi.entity.Role;
 import web.charmi.entity.enumRole;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class RoleDaoImp implements RoleDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

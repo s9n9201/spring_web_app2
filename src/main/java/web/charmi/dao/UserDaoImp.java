@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 import web.charmi.entity.Role;
 import web.charmi.entity.User;
 import web.charmi.rowmapper.UserRowMapper;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class UserDaoImp implements UserDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
