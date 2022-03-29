@@ -78,15 +78,8 @@ public class UserDaoImp implements UserDao {
             SqlStr="select * from Role, UserRole where U_URecId=:OrgId and U_RRecId=R_RecId ";
             List<Role> roleList=jdbcTemplate.query(SqlStr, map, (rs, rowNum)->{
                 Role role=new Role();
-                enumRole tmpERole=null;
-                switch (enumRole.valueOf(rs.getString("R_Name"))) {
-                    case ROLE_USER:
-                        tmpERole=enumRole.ROLE_USER; break;
-                    case ROLE_ADMIN:
-                        tmpERole=enumRole.ROLE_ADMIN; break;
-                }
                 role.setRRecId(rs.getInt("R_RecId"));
-                role.setName(tmpERole);
+                role.setName(enumRole.valueOf(rs.getString("R_Name")));
                 return role;
             });
             userList.get(0).setRoleList(roleList);
