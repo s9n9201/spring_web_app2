@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import web.charmi.rowmapper.TaskRowMapper;
@@ -33,22 +34,26 @@ public class ItemRestController {
     private SqlMap sqlMap;
 
     @PostMapping("/item/insert")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
         item.setIRecOrg(3);
         return itemService.insertItem(item);
     }
 
     @PostMapping("/item/update")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
         return itemService.updateItem(item);
     }
 
     @DeleteMapping("/item/delete/{I_RecId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String deleteItem(@PathVariable Integer I_RecId) {
         return itemService.deleteItem(I_RecId);
     }
 
     @GetMapping("/items")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Pagination selectPage(@RequestParam(required=false) Integer page) {
         try {
             Thread.sleep(2000);
