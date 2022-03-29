@@ -18,6 +18,7 @@ import web.charmi.entity.enumRole;
 import web.charmi.security.jwt.JwtUtils;
 import web.charmi.security.service.UserDetailsImp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,6 @@ public class UserRestController {
         String Msg="";
         HttpStatus httpStatus=null;
         Map<String, Object> map=new HashMap<>();
-
         if (userDao.existsUser(user.getOrgName(), "OrgName")) {
             httpStatus=HttpStatus.BAD_REQUEST;  //400
             Msg="Username is already taken !";
@@ -74,8 +74,8 @@ public class UserRestController {
 
         if (httpStatus.equals(HttpStatus.OK)) {
             user.setPassword(encoder.encode(user.getPassword()));
-            List<Role> strRoles=user.getRoleList();
-            List<Role> roles=null;
+            List<String> strRoles=user.getStrRoleList();
+            List<Role> roles=new ArrayList<>();
             if (strRoles==null) {
                 Role userRole=roleDao.findByName(enumRole.ROLE_USER)
                         .orElseThrow(()->new RuntimeException("[ Charmi ] Role is not found."));
@@ -83,8 +83,8 @@ public class UserRestController {
             } else {
                 strRoles.forEach(role->{
                     enumRole tmpEnumRole=null;
-                    switch (role.getName()) {
-                        case ROLE_ADMIN:
+                    switch (role) {
+                        case "admin":
                             tmpEnumRole=enumRole.ROLE_ADMIN; break;
                         default:
                             tmpEnumRole=enumRole.ROLE_USER;
