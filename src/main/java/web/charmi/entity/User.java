@@ -19,7 +19,17 @@ public class User {
     @NotBlank
     private String Password;
 
-    private List<Role> roleList;
+    private List<Role> roleList;    //request
+
+    private List<String> strRoleList;   //提供給response用
+
+    public List<String> getStrRoleList() {
+        return strRoleList;
+    }
+
+    public void setStrRoleList(List<String> strRoleList) {
+        this.strRoleList=strRoleList;
+    }
 
     public List<Role> getRoleList() {
         return roleList;
