@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import web.charmi.entity.Role;
 import web.charmi.entity.User;
+import web.charmi.entity.enumRole;
 import web.charmi.rowmapper.UserRowMapper;
 import web.charmi.util.SqlMap;
 
@@ -48,8 +49,7 @@ public class UserDaoImp implements UserDao {
         List<Role> roleList=user.getRoleList();
         MapSqlParameterSource[] parameterSource=new MapSqlParameterSource[roleList.size()];
         TableMap.put("U_URecId", ":U_URecId");
-        TableMap.put("U_RRecId", ":u_RRecId");
-        TableMap.put("U_RoleName", ":U_RoleName");
+        TableMap.put("U_RRecId", ":U_RRecId");
         SqlStr=sqlMap.insert("UserRole", TableMap);
 
         for (int i=0; i<roleList.size(); i++) {
@@ -57,7 +57,6 @@ public class UserDaoImp implements UserDao {
             parameterSource[i]=new MapSqlParameterSource();
             parameterSource[i].addValue("U_URecId", OrgId);
             parameterSource[i].addValue("U_RRecId", role.getRRecId());
-            parameterSource[i].addValue("U_RoleName", role.getName().name());
         }
         jdbcTemplate.batchUpdate(SqlStr, parameterSource);
         return OrgId;
@@ -65,13 +64,32 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public Optional<User> getUser(String Value, String Column) {
-        String SqlStr="";
+        String SqlStr="", OrgId="";
         Map<String, String> map=new HashMap<>();
-        SqlStr="select top 1 * from Org where "+Column+"=:"+Column+" order by OrgId ";
+        SqlStr="select top 1 OrgId, OrgName, Password, Email, RecDate"
+                +", isnull(STUFF((select ','+R_Name from Role, UserRole where U_URecId=OrgId and U_RRecId=R_RecId FOR XML PATH('')),1,1,''),'') as RoleName"
+                +" from Org where "+Column+"=:"+Column+" order by OrgId ";
         map.put(Column, Value);
-
         List<User> userList=jdbcTemplate.query(SqlStr, map, new UserRowMapper());
         if (userList.size()>0) {
+            map.clear();
+            OrgId=userList.get(0).getOrgId().toString();
+            map.put("OrgId", OrgId);
+            SqlStr="select * from Role, UserRole where U_URecId=:OrgId and U_RRecId=R_RecId ";
+            List<Role> roleList=jdbcTemplate.query(SqlStr, map, (rs, rowNum)->{
+                Role role=new Role();
+                enumRole tmpERole=null;
+                switch (enumRole.valueOf(rs.getString("R_Name"))) {
+                    case ROLE_USER:
+                        tmpERole=enumRole.ROLE_USER; break;
+                    case ROLE_ADMIN:
+                        tmpERole=enumRole.ROLE_ADMIN; break;
+                }
+                role.setRRecId(rs.getInt("R_RecId"));
+                role.setName(tmpERole);
+                return role;
+            });
+            userList.get(0).setRoleList(roleList);
             return Optional.of(userList.get(0));
         }
         return null;
