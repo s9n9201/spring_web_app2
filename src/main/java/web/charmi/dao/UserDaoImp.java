@@ -85,11 +85,11 @@ public class UserDaoImp implements UserDao {
             userList.get(0).setRoleList(roleList);
             return Optional.of(userList.get(0));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public Boolean existsUser(String Value, String Column) {
-        return getUser(Value, Column)!=null?true:false;
+        return getUser(Value, Column).isEmpty()?false:true;
     }
 }
