@@ -4,24 +4,45 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+import java.time.Instant;
 import java.util.List;
 
 public class User {
 
     private Integer OrgId;
-    @NotBlank
-    @Size(max=20)
+    @NotBlank(groups={signIn.class, signUp.class})
+    @Size(max=20, groups={signIn.class, signUp.class})
     private String OrgName;
     @NotBlank(groups=signUp.class)
     @Size(max=50, groups=signUp.class)
     @Email(groups=signUp.class)
     private String Email;
-    @NotBlank
+    @NotBlank(groups={signIn.class, signUp.class})
     private String Password;
 
     private List<Role> roleList;    //request
 
     private List<String> strRoleList;   //提供給response用
+    @NotBlank(groups=refresh.class)
+    private String RefreshToken;
+
+    private Instant ExpiryDate;
+
+    public String getRefreshToken() {
+        return RefreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        RefreshToken=refreshToken;
+    }
+
+    public Instant getExpiryDate() {
+        return ExpiryDate;
+    }
+
+    public void setExpiryDate(Instant expiryDate) {
+        ExpiryDate=expiryDate;
+    }
 
     public List<String> getStrRoleList() {
         return strRoleList;
@@ -73,4 +94,5 @@ public class User {
 
     public interface signIn extends Default {}
     public interface signUp extends Default {}
+    public interface refresh extends Default {}
 }
