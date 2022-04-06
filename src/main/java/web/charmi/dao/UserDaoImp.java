@@ -1,6 +1,7 @@
 package web.charmi.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,18 +13,17 @@ import web.charmi.entity.enumRole;
 import web.charmi.rowmapper.UserRowMapper;
 import web.charmi.util.SqlMap;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 @Component
 public class UserDaoImp implements UserDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-
     @Autowired
     private SqlMap sqlMap;
+    @Value("${webcharmi.app.jwtRefreshExpirationMs}")
+    private Long refreshTokenDurationMs;
 
     @Override
     public Integer insertUser(User user) {
@@ -91,5 +91,35 @@ public class UserDaoImp implements UserDao {
     @Override
     public Boolean existsUser(String Value, String Column) {
         return getUser(Value, Column).isEmpty()?false:true;
+    }
+
+    @Override
+    public Optional<User> findByToken(String Value, String Column) {
+        return getUser(Value, Column);
+    }
+
+    public String RefreshTokenSql() {
+        Map<String, String> TableMap=new HashMap<>();
+
+        TableMap.put("RefreshToken", ":RefreshToken");
+        TableMap.put("ExpiryDate", ":ExpiryDate");
+        return sqlMap.update("Org", TableMap, "OrgId=:OrgId");
+    }
+
+    @Override
+    public User updateRefrshToken(Integer OrgId, String Type) {
+        String RefreshToken="", ExpiryDate="1911-01-01";
+        Map<String, Object> map=new HashMap<>();
+
+        if (Type.equals("create")) {
+            RefreshToken=UUID.randomUUID().toString();
+            ExpiryDate=Instant.now().plusMillis(refreshTokenDurationMs).toString();
+        }
+
+        map.put("RefreshToken", RefreshToken);
+        map.put("ExpiryDate", ExpiryDate);
+        map.put("OrgId", OrgId);
+        jdbcTemplate.update(RefreshTokenSql(), map);
+        return getUser(OrgId.toString(), "OrgId").get();
     }
 }
