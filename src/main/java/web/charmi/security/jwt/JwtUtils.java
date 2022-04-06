@@ -17,10 +17,13 @@ public class JwtUtils {
     @Value("${webcharmi.app.jwtExpiration}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
-        UserDetailsImp userDetailsImp=(UserDetailsImp) authentication.getPrincipal();
+    public String generateJwtToken(UserDetailsImp userDetailsImp) {
+        return generateTokenFromUsername(userDetailsImp.getUsername());
+    }
+
+    public String generateTokenFromUsername(String username) {
         return Jwts.builder()
-                .setSubject(userDetailsImp.getUsername())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date( (new Date()).getTime()+jwtExpirationMs ))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

@@ -11,4 +11,8 @@ public interface UserDao {
     Optional<User> getUser(String Value, String Column);
 
     Boolean existsUser(String Value, String Column);
+
+    Optional<User> findByToken(String Value, String Column);
+
+    User updateRefrshToken(Integer OrgId, String Type);
 }
