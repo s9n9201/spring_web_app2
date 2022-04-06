@@ -11,6 +11,7 @@ import web.charmi.entity.Role;
 import web.charmi.entity.User;
 import web.charmi.entity.enumRole;
 import web.charmi.rowmapper.UserRowMapper;
+import web.charmi.util.Date;
 import web.charmi.util.SqlMap;
 
 import java.time.Instant;
@@ -24,6 +25,8 @@ public class UserDaoImp implements UserDao {
     private SqlMap sqlMap;
     @Value("${webcharmi.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
+    @Autowired
+    Date date;
 
     @Override
     public Integer insertUser(User user) {
@@ -66,7 +69,7 @@ public class UserDaoImp implements UserDao {
     public Optional<User> getUser(String Value, String Column) {
         String SqlStr="", OrgId="";
         Map<String, String> map=new HashMap<>();
-        SqlStr="select top 1 OrgId, OrgName, Password, Email, RecDate"
+        SqlStr="select top 1 OrgId, OrgName, Password, Email, RecDate, RefreshToken, ExpiryDate"
                 +", isnull(STUFF((select ','+R_Name from Role, UserRole where U_URecId=OrgId and U_RRecId=R_RecId FOR XML PATH('')),1,1,''),'') as RoleName"
                 +" from Org where "+Column+"=:"+Column+" order by OrgId ";
         map.put(Column, Value);
@@ -113,9 +116,8 @@ public class UserDaoImp implements UserDao {
 
         if (Type.equals("create")) {
             RefreshToken=UUID.randomUUID().toString();
-            ExpiryDate=Instant.now().plusMillis(refreshTokenDurationMs).toString();
+            ExpiryDate=date.DateStr(Instant.now().plusMillis(refreshTokenDurationMs));
         }
-
         map.put("RefreshToken", RefreshToken);
         map.put("ExpiryDate", ExpiryDate);
         map.put("OrgId", OrgId);
