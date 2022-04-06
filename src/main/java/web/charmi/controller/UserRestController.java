@@ -115,7 +115,7 @@ public class UserRestController {
         return userService.findByToken(refreshToken, "RefreshToken")
                 .map(userService::verifyExpiration)
                 .map(tmpUser->{
-                    String token=jwtUtils.getUserNameFromJwtToken(tmpUser.getOrgName());
+                    String token=jwtUtils.generateTokenFromUsername(tmpUser.getOrgName());
                     Map<String, Object> map=new HashMap<>();
                     map.put("Token",token );
                     map.put("RefreshToken", tmpUser.getRefreshToken());
