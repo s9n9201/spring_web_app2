@@ -27,7 +27,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setEmail(rs.getString("Email"));
         user.setPassword(rs.getString("Password"));
         user.setRefreshToken(rs.getString("RefreshToken"));
-        user.setExpiryDate(rs.getDate("ExpiryDate").toInstant());
+        user.setExpiryDate(rs.getTimestamp("ExpiryDate").toInstant());
         user.setStrRoleList(roles);
         return user;
     }
