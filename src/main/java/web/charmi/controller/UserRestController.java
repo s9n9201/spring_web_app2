@@ -15,8 +15,10 @@ import web.charmi.dao.UserDao;
 import web.charmi.entity.Role;
 import web.charmi.entity.User;
 import web.charmi.entity.enumRole;
+import web.charmi.exception.TokenRefreshException;
 import web.charmi.security.jwt.JwtUtils;
 import web.charmi.security.service.UserDetailsImp;
+import web.charmi.service.UserService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,8 @@ public class UserRestController {
     @Autowired
     private UserDao userDao;
     @Autowired
+    private UserService userService;
+    @Autowired
     private RoleDao roleDao;
     @Autowired
     private PasswordEncoder encoder;
@@ -44,12 +48,15 @@ public class UserRestController {
         Map<String, Object> map=new HashMap<>();
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getOrgName(),user.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt=jwtUtils.generateJwtToken(authentication);
         UserDetailsImp userDetailsImp=(UserDetailsImp) authentication.getPrincipal();
+        String jwt=jwtUtils.generateJwtToken(userDetailsImp);
         List<String> roles=userDetailsImp.getAuthorities().stream()
                             .map(item->item.getAuthority())
                             .collect(Collectors.toList());
+        User tmpUser=userService.createRefrshToken(userDetailsImp.getOrgId());
+
         map.put("Token", jwt);
+        map.put("RefreshToken", tmpUser.getRefreshToken());
         map.put("OrgId", userDetailsImp.getOrgId());
         map.put("OrgName", userDetailsImp.getUsername());
         map.put("Role", roles);
@@ -99,5 +106,21 @@ public class UserRestController {
         }
         map.put("message", Msg);
         return ResponseEntity.status(httpStatus).body(map);
+    }
+
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshToken(@RequestBody @Validated(User.refresh.class) User user) {
+        String refreshToken=user.getRefreshToken();
+
+        return userService.findByToken(refreshToken, "RefreshToken")
+                .map(userService::verifyExpiration)
+                .map(tmpUser->{
+                    String token=jwtUtils.getUserNameFromJwtToken(tmpUser.getOrgName());
+                    Map<String, Object> map=new HashMap<>();
+                    map.put("Token",token );
+                    map.put("RefreshToken", tmpUser.getRefreshToken());
+                    return ResponseEntity.ok(map);
+                })
+                .orElseThrow(()->new TokenRefreshException(refreshToken, "Refresh token is not in database!"));
     }
 }
