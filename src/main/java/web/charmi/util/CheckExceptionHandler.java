@@ -13,6 +13,7 @@ import web.charmi.exception.TokenRefreshException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 
 @ControllerAdvice
 public class CheckExceptionHandler {
@@ -34,9 +35,10 @@ public class CheckExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
-        String defaultMessage=exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        System.out.println("MethodArgumentNotValid: "+defaultMessage);
-        JsonNode jsonNode=objectMapper.createObjectNode().put("message",defaultMessage);
+        String errorField=exception.getBindingResult().getFieldError().getField();
+        String errorMessage=exception.getBindingResult().getFieldError().getDefaultMessage();
+        System.out.println("MethodArgumentNotValidException: "+errorField+errorMessage);
+        JsonNode jsonNode=objectMapper.createObjectNode().put("message",errorField+errorMessage);
         return ResponseEntity.status(400).body(jsonNode);
     }
 
