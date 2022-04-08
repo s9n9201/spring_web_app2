@@ -1,10 +1,12 @@
 package web.charmi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import web.charmi.dao.ItemDao;
 import web.charmi.entity.Item;
 import web.charmi.entity.Pagination;
+import web.charmi.security.service.UserDetailsImp;
 
 import java.util.List;
 
@@ -16,7 +18,17 @@ public class ItemServiceImp implements ItemService {
 
     @Override
     public String insertItem(Item item) {
-        return "新增 物品編號: "+itemDao.insertItem(item);
+        UserDetailsImp userDetailsImp=(UserDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer OrgId=userDetailsImp.getOrgId();
+        try {
+            item.setIRecOrg(OrgId);
+            item.setITRecId(2);
+            itemDao.insertItem(item);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "Not OK";
+        }
+        return "OK";
     }
 
     @Override
