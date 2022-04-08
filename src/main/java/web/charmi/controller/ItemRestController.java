@@ -3,6 +3,8 @@ package web.charmi.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -35,9 +37,20 @@ public class ItemRestController {
 
     @PostMapping("/item/insert")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public String insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
-        item.setIRecOrg(3);
-        return itemService.insertItem(item);
+    public ResponseEntity<?> insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
+        Map<String, String> MsgMap=new HashMap<>();
+        HttpStatus httpStatus=null;
+        String ResultMsg=itemService.insertItem(item);
+        if (ResultMsg.equals("OK")) {
+            httpStatus=HttpStatus.OK;
+            MsgMap.put("message", "新增成功");
+            MsgMap.put("status", "200");
+        } else {
+            httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
+            MsgMap.put("message", "新增失敗，請重新操作！");
+            MsgMap.put("status", "500");
+        }
+        return ResponseEntity.status(httpStatus).body(MsgMap);
     }
 
     @PostMapping("/item/update")
