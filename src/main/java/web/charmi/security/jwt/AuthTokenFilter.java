@@ -29,7 +29,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt=parseJwt(request);
-            if (jwt!=null && jwtUtils.validateJwtToken(jwt)) {
+            if (jwt!=null && !request.getRequestURI().contains("refreshtoken") && jwtUtils.validateJwtToken(jwt)) {
                 String username=jwtUtils.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails=userDetailsServiceImp.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
