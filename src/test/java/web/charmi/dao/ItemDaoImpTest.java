@@ -58,15 +58,6 @@ class ItemDaoImpTest {
 
     @Test
     @Transactional
-    public void getByAll() {
-        List<Item> itemList=itemDao.getByAll();
-
-        assertNotNull(itemList);
-        assertEquals(1, itemList.get(0).getIRecId());
-    }
-
-    @Test
-    @Transactional
     public void getByIRecId() {
         Item item=itemDao.getByIRecId(1);
 
