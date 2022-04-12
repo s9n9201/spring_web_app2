@@ -8,8 +8,6 @@ import java.util.List;
 public interface ItemService {
     Item geyByIRecId(Integer I_RecId);
 
-    List<Item> getByAll();
-
     String insertItem(Item item);
 
     String updateItem(Item item);

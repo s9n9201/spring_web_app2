@@ -42,11 +42,6 @@ public class ItemServiceImp implements ItemService {
     }
 
     @Override
-    public List<Item> getByAll() {
-        return itemDao.getByAll();
-    }
-
-    @Override
     public Item geyByIRecId(Integer I_RecId) {
         return itemDao.getByIRecId(I_RecId);
     }
