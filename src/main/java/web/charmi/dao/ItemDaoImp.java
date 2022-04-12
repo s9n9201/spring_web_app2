@@ -106,22 +106,11 @@ public class ItemDaoImp implements ItemDao {
     }
 
     @Override
-    public List<Item> getByAll() {
-        String SqlStr="";
-        List<Item> itemList;
-        SqlStr="select I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_Name, T_SubName, "
-                +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg "
-                +"from Item, ItemType where I_isDelete=0 and I_TRecId=T_RecId order by I_RecId, I_Name ";
-        itemList=JdbcTemplate.query(SqlStr, new ItemRowMapper());
-        return itemList;
-    }
-
-    @Override
     public Item getByIRecId(Integer I_RecId) {
         String SqlStr="";
         List<Item> itemList;
         Map<String, Object> map=new HashMap<>();
-        SqlStr="select I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_Name, T_SubName, "
+        SqlStr="select I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
                 +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg "
                 +"from Item, ItemType where I_RecId=:I_RecId and I_isDelete=0 and I_TRecId=T_RecId order by I_RecId, I_Name ";
         map.put("I_RecId",I_RecId);
@@ -143,7 +132,7 @@ public class ItemDaoImp implements ItemDao {
         end=pageSize*page+1;
 
         SqlStr="select * from ("
-                +"select ROW_NUMBER() OVER(order by I_RecId) as 'Row_Num', I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_Name, T_SubName, "
+                +"select ROW_NUMBER() OVER(order by I_RecId) as 'Row_Num', I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
                 +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg "
                 +"from Item, ItemType where I_isDelete=0 and I_TRecId=T_RecId "
                 +") ItemhasRow where Row_Num>:start and Row_Num<:end order by I_RecId, I_Name ";

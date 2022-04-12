@@ -8,8 +8,6 @@ public interface ItemDao {
 
     Item getByIRecId(Integer I_RecId);
 
-    List<Item> getByAll();
-
     Integer insertItem(Item item);
 
     String updateItem(Item item);
