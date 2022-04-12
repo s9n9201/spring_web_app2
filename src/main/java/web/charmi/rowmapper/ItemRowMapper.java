@@ -25,6 +25,7 @@ public class ItemRowMapper implements RowMapper<Item> {
         item.setIRecDate(rs.getTimestamp("I_RecDate"));
         item.setIUpdateOrg(rs.getInt("I_UpdateOrg"));
         item.setItemType(itemType);
+        itemType.setTRecId(rs.getInt("T_RecId"));
         itemType.setTName(rs.getString("T_Name"));
         itemType.setTSubName(rs.getString("T_SubName"));
         return item;
