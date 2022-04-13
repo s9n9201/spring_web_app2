@@ -38,6 +38,9 @@ public class ItemRestController {
     @PostMapping("/item/insert")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
+        try {
+            Thread.sleep(500);
+        } catch(InterruptedException e) {}
         Map<String, String> MsgMap=new HashMap<>();
         HttpStatus httpStatus=null;
         String ResultMsg=itemService.insertItem(item);
@@ -56,6 +59,9 @@ public class ItemRestController {
     @PostMapping("/item/update")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
+        try {
+            Thread.sleep(500);
+        } catch(InterruptedException e) {}
         return itemService.updateItem(item);
     }
 
@@ -69,7 +75,7 @@ public class ItemRestController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Pagination selectPage(@RequestParam(required=false) Integer page) {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(500);
         } catch(InterruptedException e) {}
 
         if (page==null || page<=0) {
@@ -82,6 +88,7 @@ public class ItemRestController {
     }
 
     @GetMapping("/items/{I_RecId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Item selectOne(@PathVariable Integer I_RecId) {
         return itemService.geyByIRecId(I_RecId);
     }
