@@ -7,6 +7,7 @@ import web.charmi.dao.ItemDao;
 import web.charmi.entity.Item;
 import web.charmi.entity.Pagination;
 import web.charmi.security.service.UserDetailsImp;
+import web.charmi.util.UserDitail;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ItemServiceImp implements ItemService {
 
     @Override
     public String updateItem(Item item) {
+        item.setIUpdateOrg(UserDitail.getOrgId());
         return itemDao.updateItem(item);
     }
 
