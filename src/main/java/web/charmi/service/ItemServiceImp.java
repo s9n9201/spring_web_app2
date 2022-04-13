@@ -19,23 +19,26 @@ public class ItemServiceImp implements ItemService {
 
     @Override
     public String insertItem(Item item) {
-        UserDetailsImp userDetailsImp=(UserDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer OrgId=userDetailsImp.getOrgId();
         try {
-            item.setIRecOrg(OrgId);
-            item.setITRecId(2);
+            item.setIRecOrg(UserDitail.getOrgId());
             itemDao.insertItem(item);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "Not OK";
         }
-        return "OK";
+        return "新增成功！";
     }
 
     @Override
     public String updateItem(Item item) {
-        item.setIUpdateOrg(UserDitail.getOrgId());
-        return itemDao.updateItem(item);
+        try {
+            item.setIUpdateOrg(UserDitail.getOrgId());
+            itemDao.updateItem(item);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "Not OK";
+        }
+        return "編輯成功！";
     }
 
     @Override
