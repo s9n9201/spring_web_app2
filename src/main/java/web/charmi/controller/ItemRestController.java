@@ -35,34 +35,40 @@ public class ItemRestController {
     @Autowired
     private SqlMap sqlMap;
 
+    public Map<String, String> MsgMap(String ResultMsg) {
+        Map<String, String> MsgMap=new HashMap<>();
+        if (ResultMsg.equals("Not OK")) {
+            MsgMap.put("message", "新增失敗，請重新操作！");
+            MsgMap.put("status", String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        } else {
+            MsgMap.put("message", ResultMsg);
+            MsgMap.put("status", String.valueOf(HttpStatus.OK.value()));
+        }
+        return MsgMap;
+    }
+
     @PostMapping("/item/insert")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
-        Map<String, String> MsgMap=new HashMap<>();
-        HttpStatus httpStatus=null;
         String ResultMsg=itemService.insertItem(item);
-        if (ResultMsg.equals("OK")) {
-            httpStatus=HttpStatus.OK;
-            MsgMap.put("message", "新增成功");
-            MsgMap.put("status", "200");
-        } else {
-            httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
-            MsgMap.put("message", "新增失敗，請重新操作！");
-            MsgMap.put("status", "500");
-        }
-        return ResponseEntity.status(httpStatus).body(MsgMap);
+        return ResponseEntity
+                .status(Integer.parseInt(MsgMap(ResultMsg).get("status")))
+                .body(MsgMap(ResultMsg));
     }
 
     @PostMapping("/item/update")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public String updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
+    public ResponseEntity<?> updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
-        return itemService.updateItem(item);
+        String ResultMsg=itemService.updateItem(item);
+        return ResponseEntity
+                .status(Integer.parseInt(MsgMap(ResultMsg).get("status")))
+                .body(MsgMap(ResultMsg));
     }
 
     @DeleteMapping("/item/delete/{I_RecId}")
