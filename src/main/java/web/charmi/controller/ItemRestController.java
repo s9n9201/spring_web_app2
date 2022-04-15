@@ -79,18 +79,19 @@ public class ItemRestController {
 
     @GetMapping("/items")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public Pagination selectPage(@RequestParam(required=false) Integer page) {
+    public Pagination selectPage(@RequestParam(required=false) Integer page, @RequestParam(required=false) String search) {
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
 
-        if (page==null || page<=0) {
-            page=1;
-        }
+        page=(page==null || page<=0 ? 1 : page);
+        search=(search==null? "" : search);
+
         log.info("Page > {}", page);    //The Page input a mustache
+        log.info("searchText > {}", search);    //The Page input a mustache
         //log.warn();
         //log.error();
-        return itemService.getByAllPage(page);
+        return itemService.getByAllPage(page, search);
     }
 
     @GetMapping("/items/{I_RecId}")
