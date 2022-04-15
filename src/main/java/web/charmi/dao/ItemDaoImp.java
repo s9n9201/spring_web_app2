@@ -110,9 +110,7 @@ public class ItemDaoImp implements ItemDao {
         String SqlStr="";
         List<Item> itemList;
         Map<String, Object> map=new HashMap<>();
-        SqlStr="select I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
-                +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg "
-                +"from Item, ItemType where I_RecId=:I_RecId and I_isDelete=0 and I_TRecId=T_RecId order by I_RecId, I_Name ";
+        SqlStr=SQL("", "where I_RecId=:I_RecId and I_isDelete=0 and I_TRecId=T_RecId", "");
         map.put("I_RecId",I_RecId);
         itemList=JdbcTemplate.query(SqlStr, map, new ItemRowMapper());
         if (itemList.size()>0) {
@@ -122,33 +120,56 @@ public class ItemDaoImp implements ItemDao {
     }
 
     @Override
-    public List<Item> getByAllPage(Integer page, Integer pageSize) {
-        String SqlStr="";
-        int start=0, end=0;
+    public List<Item> getByAllPage(Integer start, Integer end, String searchText) {
+        String SqlStr="", tmpSql="";
         List<Item> itemList;
         Map<String, Object> map=new HashMap<>();
 
-        start=pageSize*(page-1);
-        end=pageSize*page+1;
+        tmpSql=SQL("", "", searchText);
+        SqlStr="select * from ("+tmpSql+") ItemhasRow where Row_Num>:start and Row_Num<:end ";
 
-        SqlStr="select * from ("
-                +"select ROW_NUMBER() OVER(order by I_RecId) as 'Row_Num', I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
-                +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg "
-                +"from Item, ItemType where I_isDelete=0 and I_TRecId=T_RecId "
-                +") ItemhasRow where Row_Num>:start and Row_Num<:end order by I_RecId, I_Name ";
-        map.put("start",start);
-        map.put("end",end);
+        if (!searchText.equals("")) {
+            map.put("searchText", "%"+searchText+"%");
+        }
+        map.put("start", start);
+        map.put("end", end);
         itemList=JdbcTemplate.query(SqlStr, map, new ItemRowMapper());
         return itemList;
     }
 
     @Override
-    public Long getByAllCount() {
+    public Long getByAllCount(String searchText) {
         String SqlStr="";
         long Count=0;
         Map<String, Object> map=new HashMap<>();
-        SqlStr="select count(I_RecId) from Item where I_isDelete=0";
+        SqlStr=SQL("count(I_RecId)", "", searchText);
+        if (!searchText.equals("")) {
+            map.put("searchText", "%"+searchText+"%");
+        }
         Count=JdbcTemplate.queryForObject(SqlStr, map, Long.class);
         return Count;
+    }
+
+    public String SQL(String Column, String Where, String searchText) {
+        String SqlStr="";
+        if (Column.equals("")) {
+            Column="ROW_NUMBER() OVER(order by I_RecId desc) as 'Row_Num', I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
+                    +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg";
+        }
+        if (Where.equals("")) {
+            Where="where I_isDelete=0 and I_TRecId=T_RecId ";
+        }
+        SqlStr="select "+Column+" from Item, ItemType "+Where;
+        if (!searchText.equals("")) {
+            SqlStr+="and ("
+                    +"I_Name like :searchText or "
+                    +"I_Source like :searchText or "
+                    +"I_MadeIn like :searchText or "
+                    +"I_Amount like :searchText or "
+                    +"I_Cost like :searchText or "
+                    +"I_Price like :searchText "
+                    +") ";
+        }
+        return SqlStr;
     }
 }
