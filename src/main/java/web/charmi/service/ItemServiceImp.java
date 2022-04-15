@@ -52,13 +52,15 @@ public class ItemServiceImp implements ItemService {
     }
 
     @Override
-    public Pagination getByAllPage(Integer page) {
+    public Pagination getByAllPage(Integer page, String searchText) {
         Pagination pagination=new Pagination();
         List<Item> itemList;
-        int pageSize=15, totalPage=1;
+        int pageSize=15, totalPage=1, start=0, end=0;
         long Count=0;
-        Count=itemDao.getByAllCount();
-        itemList=itemDao.getByAllPage(page, pageSize);
+        Count=itemDao.getByAllCount(searchText);
+        start=pageSize*(page-1);
+        end=pageSize*page+1;
+        itemList=itemDao.getByAllPage(start, end, searchText);
         if (Count>pageSize) {
             totalPage=(int) Count/pageSize;
             if (Count%pageSize>0) {
