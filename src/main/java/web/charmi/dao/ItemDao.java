@@ -14,7 +14,7 @@ public interface ItemDao {
 
     String deleteItem(Integer I_RecId);
 
-    List<Item> getByAllPage(Integer page, Integer pageSize);
+    List<Item> getByAllPage(Integer start, Integer end, String searchText);
 
-    Long getByAllCount();
+    Long getByAllCount(String searchText);
 }

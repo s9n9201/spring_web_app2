@@ -14,5 +14,5 @@ public interface ItemService {
 
     String deleteItem(Integer I_RecId);
 
-    Pagination getByAllPage(Integer page);
+    Pagination getByAllPage(Integer page, String searchText);
 }
