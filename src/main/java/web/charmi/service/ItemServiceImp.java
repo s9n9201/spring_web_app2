@@ -55,7 +55,7 @@ public class ItemServiceImp implements ItemService {
     public Pagination getByAllPage(Integer page) {
         Pagination pagination=new Pagination();
         List<Item> itemList;
-        int pageSize=5, totalPage=1;
+        int pageSize=15, totalPage=1;
         long Count=0;
         Count=itemDao.getByAllCount();
         itemList=itemDao.getByAllPage(page, pageSize);
