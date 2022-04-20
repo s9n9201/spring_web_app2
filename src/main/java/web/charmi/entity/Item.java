@@ -12,6 +12,8 @@ public class Item {
     @Positive(message="資料異常，請重新操作！", groups=Update.class)
     private Integer IRecId;
 
+    private String IUUID;
+
     @Positive(message="請選擇物品種類！")
     private Integer ITRecId;
 
@@ -60,6 +62,14 @@ public class Item {
 
     public void setIRecId(Integer IRecId) {
         this.IRecId=IRecId;
+    }
+
+    public String getIUUID() {
+        return IUUID;
+    }
+
+    public void setIUUID(String IUUID) {
+        this.IUUID=IUUID;
     }
 
     public Integer getITRecId() {

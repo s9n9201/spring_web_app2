@@ -1,12 +1,11 @@
 package web.charmi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import web.charmi.dao.ItemDao;
 import web.charmi.entity.Item;
 import web.charmi.entity.Pagination;
-import web.charmi.security.service.UserDetailsImp;
+import web.charmi.util.Tool;
 import web.charmi.util.UserDitail;
 
 import java.util.List;
@@ -21,6 +20,7 @@ public class ItemServiceImp implements ItemService {
     public String insertItem(Item item) {
         try {
             item.setIRecOrg(UserDitail.getOrgId());
+            item.setIUUID(Tool.getUUID());
             itemDao.insertItem(item);
         } catch (Exception e) {
             System.out.println(e.getMessage());
