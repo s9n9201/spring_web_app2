@@ -26,7 +26,6 @@ public class PurchassDetailDaoImp implements PurchassDetailDao {
     @Override
     public String insertPurchassDetail(Purchass purchass, Integer P_RecId) {
         String SqlStr="";
-        Map<String, Object> map=new HashMap<>();
         Map<String, String> TableMap=new HashMap<>();
         List<PurchassDetail> purchassList=purchass.getPurchassDetailList();
         MapSqlParameterSource[] parameterSources=new MapSqlParameterSource[purchassList.size()];
