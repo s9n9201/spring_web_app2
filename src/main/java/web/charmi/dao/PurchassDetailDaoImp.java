@@ -8,8 +8,6 @@ import web.charmi.entity.Purchass;
 import web.charmi.entity.PurchassDetail;
 import web.charmi.util.SqlMap;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

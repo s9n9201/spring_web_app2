@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import web.charmi.exception.TokenRefreshException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
 
 @ControllerAdvice
 public class CheckExceptionHandler {
@@ -49,5 +50,14 @@ public class CheckExceptionHandler {
                 .put("timestamp", date.Now())
                 .put("message", exception.getMessage());
         return ResponseEntity.status(403).body(jsonNode);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Object> handleMaxUploadSizeException(MaxUploadSizeExceededException exception, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*"); //需要加這個，才不會因為檔案超過大小後，前端出現CORS的異常，才能正常噴出Response內容
+        JsonNode jsonNode=objectMapper.createObjectNode()
+                .put("message", "檔案太大了！")
+                .put("status", HttpStatus.EXPECTATION_FAILED.value());
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(jsonNode);
     }
 }
