@@ -15,7 +15,6 @@ import web.charmi.exception.TokenRefreshException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
 
 @ControllerAdvice
 public class CheckExceptionHandler {
