@@ -73,7 +73,7 @@ public class WebFileDaoImp implements WebFileDao {
     public Optional<WebFile> deleteFile(String UUIDName) {
         WebFile webFile=getFile(UUIDName).orElse(null);
         if (webFile!=null) {
-            String SqlStr="update FileWeb set F_isDelete=1, F_DeleteOrg=2, F_DeleteDate=N'"+date.Now()+"' where F_isDelete=0 and F_UUIDName=N'"+webFile.getFUUIDName()+"' ";
+            String SqlStr="update WebFile set F_isDelete=1, F_DeleteOrg=2, F_DeleteDate=N'"+date.Now()+"' where F_isDelete=0 and F_UUIDName=N'"+webFile.getFUUIDName()+"' ";
             jdbcTemplate.update(SqlStr, new HashMap<>());
         }
         return Optional.ofNullable(webFile);
