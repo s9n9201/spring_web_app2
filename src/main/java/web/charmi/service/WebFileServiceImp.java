@@ -25,7 +25,7 @@ public class WebFileServiceImp implements WebFileService {
     private String root;
     @Override
     public List<String> save(String Module, String UUID, MultipartFile[] files) {
-        boolean hasPath=true;
+        boolean hasPath=false;
         int fileSort=0;
         List<WebFile> webFileList=new ArrayList<>();
         List<String> resultList=new ArrayList<>();
@@ -34,8 +34,8 @@ public class WebFileServiceImp implements WebFileService {
         try {
             filePath=Paths.get(this.root, Module, UUID);
             Files.createDirectories(filePath);
+            hasPath=true;
         } catch (Exception e) {
-            hasPath=false;
             throw new RuntimeException("建立路徑異常！");
         }
 
@@ -50,7 +50,7 @@ public class WebFileServiceImp implements WebFileService {
                     webFile.setFFileName(file.getOriginalFilename());
                     webFile.setFUUIDName(fileUid);
                     webFile.setFSize(file.getSize());
-                    //webFile.setFSort();
+                    webFile.setFSort(0);
                     webFileList.add(webFile);
                 } catch (IOException e) {
                     e.printStackTrace();
