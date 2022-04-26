@@ -1,5 +1,7 @@
 package web.charmi.payload.response;
 
+import org.springframework.http.HttpStatus;
+
 public class Message {
     private Integer status;
     private String message;
@@ -7,6 +9,10 @@ public class Message {
     public Message(String message, Integer status) {
         this.message=message;
         this.status=status;
+    }
+    public Message(String message, HttpStatus status) {
+        this.message=message;
+        this.status=status.value();
     }
 
     public Integer getStatus() {
