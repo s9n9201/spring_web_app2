@@ -3,6 +3,7 @@ package web.charmi.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 import web.charmi.entity.WebFile;
 import web.charmi.util.SqlMap;
 import web.charmi.util.UserDitail;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class WebFileDaoImp implements WebFileDao {
     @Autowired
     SqlMap sqlMap;
