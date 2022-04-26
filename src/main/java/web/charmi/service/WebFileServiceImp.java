@@ -2,6 +2,7 @@ package web.charmi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import web.charmi.dao.WebFileDao;
 import web.charmi.entity.WebFile;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class WebFileServiceImp implements WebFileService {
     @Autowired
     private WebFileDao webFileDao;
@@ -48,6 +50,7 @@ public class WebFileServiceImp implements WebFileService {
                     webFile.setFFileName(file.getOriginalFilename());
                     webFile.setFUUIDName(fileUid);
                     webFile.setFSize(file.getSize());
+                    //webFile.setFSort();
                     webFileList.add(webFile);
                 } catch (IOException e) {
                     e.printStackTrace();
