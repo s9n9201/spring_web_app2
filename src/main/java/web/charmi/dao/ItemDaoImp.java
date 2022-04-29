@@ -35,6 +35,7 @@ public class ItemDaoImp implements ItemDao {
         Map<String, String> TableMap=new HashMap<>();
         KeyHolder keyHolder=new GeneratedKeyHolder();
 
+        TableMap.put("I_UUID", ":I_UUID");
         TableMap.put("I_TRecId",":I_TRecId");
         TableMap.put("I_Name",":I_Name");
         TableMap.put("I_Source",":I_Source");
@@ -46,15 +47,16 @@ public class ItemDaoImp implements ItemDao {
         TableMap.put("I_RecOrg",":I_RecOrg");
         SqlStr=sqlMap.insert("Item",TableMap);
 
-        map.put("I_TRecId",item.getITRecId());
-        map.put("I_Name",item.getIName());
-        map.put("I_Source",item.getISource());
-        map.put("I_MadeIn",item.getIMadeIn());
-        map.put("I_Amount",item.getIAmount()+"");
-        map.put("I_Cost",item.getICost()+"");
-        map.put("I_Price",item.getIPrice()+"");
-        map.put("I_Total",item.getITotal()+"");
-        map.put("I_RecOrg",item.getIRecOrg());
+        map.put("I_UUID", item.getIUUID());
+        map.put("I_TRecId", item.getITRecId());
+        map.put("I_Name", item.getIName());
+        map.put("I_Source", item.getISource());
+        map.put("I_MadeIn", item.getIMadeIn());
+        map.put("I_Amount", item.getIAmount()+"");
+        map.put("I_Cost", item.getICost()+"");
+        map.put("I_Price", item.getIPrice()+"");
+        map.put("I_Total", item.getITotal()+"");
+        map.put("I_RecOrg", item.getIRecOrg());
         JdbcTemplate.update(SqlStr,new MapSqlParameterSource(map),keyHolder);
         I_RecId=keyHolder.getKey().intValue();
         return I_RecId;
