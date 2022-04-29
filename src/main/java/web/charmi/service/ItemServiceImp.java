@@ -17,14 +17,20 @@ public class ItemServiceImp implements ItemService {
     private ItemDao itemDao;
 
     @Override
-    public Integer insertItem(Item item) {
+    public Item insertItem(Item item) {
         try {
+            String uuid=Tool.getUUID();
             item.setIRecOrg(UserDitail.getOrgId());
-            item.setIUUID(Tool.getUUID());
-            return itemDao.insertItem(item);
+            item.setIUUID(uuid);
+            Integer RecId=itemDao.insertItem(item);
+
+            Item newItem=new Item();
+            newItem.setIRecId(RecId);
+            newItem.setIUUID(uuid);
+            return newItem;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return 0;
+            return null;
         }
     }
 
