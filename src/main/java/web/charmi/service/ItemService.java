@@ -8,7 +8,7 @@ import java.util.List;
 public interface ItemService {
     Item geyByIRecId(Integer I_RecId);
 
-    String insertItem(Item item);
+    Integer insertItem(Item item);
 
     String updateItem(Item item);
 

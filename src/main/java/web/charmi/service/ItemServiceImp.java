@@ -17,16 +17,15 @@ public class ItemServiceImp implements ItemService {
     private ItemDao itemDao;
 
     @Override
-    public String insertItem(Item item) {
+    public Integer insertItem(Item item) {
         try {
             item.setIRecOrg(UserDitail.getOrgId());
             item.setIUUID(Tool.getUUID());
-            itemDao.insertItem(item);
+            return itemDao.insertItem(item);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "Not OK";
+            return 0;
         }
-        return "新增成功！";
     }
 
     @Override
@@ -36,7 +35,7 @@ public class ItemServiceImp implements ItemService {
             itemDao.updateItem(item);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "Not OK";
+            return "儲存失敗，請重新操作！";
         }
         return "編輯成功！";
     }
