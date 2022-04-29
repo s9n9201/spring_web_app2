@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import web.charmi.payload.response.Message;
 import web.charmi.rowmapper.TaskRowMapper;
 import web.charmi.entity.Item;
 import web.charmi.entity.Pagination;
@@ -35,40 +36,44 @@ public class ItemRestController {
     @Autowired
     private SqlMap sqlMap;
 
-    public Map<String, String> MsgMap(String ResultMsg) {
-        Map<String, String> MsgMap=new HashMap<>();
-        if (ResultMsg.equals("Not OK")) {
-            MsgMap.put("message", "新增失敗，請重新操作！");
-            MsgMap.put("status", String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        } else {
-            MsgMap.put("message", ResultMsg);
-            MsgMap.put("status", String.valueOf(HttpStatus.OK.value()));
-        }
-        return MsgMap;
-    }
-
     @PostMapping("/item/insert")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> insertItem(@RequestBody @Validated(Item.Insert.class) Item item) {
+        String Msg="";
+        HttpStatus httpStatus=null;
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
-        String ResultMsg=itemService.insertItem(item);
+        Integer ResultRecId=itemService.insertItem(item);
+        if (ResultRecId==0) {
+            Msg="新增失敗，請重新操作！";
+            httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            Msg="新增成功！";
+            httpStatus=HttpStatus.OK;
+        }
         return ResponseEntity
-                .status(Integer.parseInt(MsgMap(ResultMsg).get("status")))
-                .body(MsgMap(ResultMsg));
+                .status(httpStatus)
+                .body(new Message(Msg, httpStatus, ResultRecId));
     }
 
     @PostMapping("/item/update")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
+        String Msg="";
+        HttpStatus httpStatus=null;
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
         String ResultMsg=itemService.updateItem(item);
+        if (ResultMsg.contains("失敗")) {
+            httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            httpStatus=HttpStatus.OK;
+        }
         return ResponseEntity
-                .status(Integer.parseInt(MsgMap(ResultMsg).get("status")))
-                .body(MsgMap(ResultMsg));
+                .status(httpStatus)
+                .body(new Message(Msg, httpStatus, item.getIRecId()));
     }
 
     @DeleteMapping("/item/delete/{I_RecId}")
