@@ -47,4 +47,12 @@ public class Message {
     public void setRecId(Integer recId) {
         this.recId=recId;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid=uuid;
+    }
 }
