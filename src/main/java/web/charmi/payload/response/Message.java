@@ -6,6 +6,7 @@ public class Message {
     private Integer status;
     private String message;
     private Integer recId;
+    private String uuid;
 
     public Message(String message, HttpStatus status) {
         this.message=message;
@@ -15,6 +16,12 @@ public class Message {
         this.message=message;
         this.status=status.value();
         this.recId=recId;
+    }
+    public Message(String message, HttpStatus status, Integer recId, String uuid) {
+        this.message=message;
+        this.status=status.value();
+        this.recId=recId;
+        this.uuid=uuid;
     }
 
     public Integer getStatus() {
