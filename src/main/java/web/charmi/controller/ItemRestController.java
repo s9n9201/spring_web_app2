@@ -60,7 +60,6 @@ public class ItemRestController {
     @PostMapping("/item/update")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> updateItem(@RequestBody @Validated(Item.Update.class) Item item) {
-        String Msg="";
         HttpStatus httpStatus=null;
         try {
             Thread.sleep(500);
@@ -73,7 +72,7 @@ public class ItemRestController {
         }
         return ResponseEntity
                 .status(httpStatus)
-                .body(new Message(Msg, httpStatus, item.getIRecId()));
+                .body(new Message(ResultMsg, httpStatus, item.getIRecId()));
     }
 
     @DeleteMapping("/item/delete/{I_RecId}")
