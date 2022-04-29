@@ -44,8 +44,8 @@ public class ItemRestController {
         try {
             Thread.sleep(500);
         } catch(InterruptedException e) {}
-        Integer ResultRecId=itemService.insertItem(item);
-        if (ResultRecId==0) {
+        Item newItem=itemService.insertItem(item);
+        if (newItem==null) {
             Msg="新增失敗，請重新操作！";
             httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
         } else {
@@ -54,7 +54,7 @@ public class ItemRestController {
         }
         return ResponseEntity
                 .status(httpStatus)
-                .body(new Message(Msg, httpStatus, ResultRecId));
+                .body(new Message(Msg, httpStatus, newItem.getIRecId(), newItem.getIUUID()));
     }
 
     @PostMapping("/item/update")
