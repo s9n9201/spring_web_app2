@@ -19,15 +19,11 @@ public class ItemServiceImp implements ItemService {
     @Override
     public Item insertItem(Item item) {
         try {
-            String uuid=Tool.getUUID();
             item.setIRecOrg(UserDitail.getOrgId());
-            item.setIUUID(uuid);
+            item.setIUUID(Tool.getUUID());
             Integer RecId=itemDao.insertItem(item);
-
-            Item newItem=new Item();
-            newItem.setIRecId(RecId);
-            newItem.setIUUID(uuid);
-            return newItem;
+            item.setIRecId(RecId);
+            return item;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
