@@ -41,10 +41,10 @@ public class WebFileController {
         } else {
             try {
                 List<String> resultList=webFileService.save(module, fromuuid, files);
-                message=resultList.size()+"個檔案上傳成功！";
+                message=resultList.size()+"個檔案";
                 httpStatus=HttpStatus.OK;
             } catch (Exception e) {
-                message="上傳檔案失敗！";
+                message="上傳檔案失敗";
                 httpStatus=HttpStatus.INTERNAL_SERVER_ERROR;
             }
         }
