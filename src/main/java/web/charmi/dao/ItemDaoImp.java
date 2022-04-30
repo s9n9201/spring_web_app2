@@ -155,7 +155,7 @@ public class ItemDaoImp implements ItemDao {
     public String SQL(String Column, String Where, String searchText) {
         String SqlStr="";
         if (Column.equals("")) {
-            Column="ROW_NUMBER() OVER(order by I_RecId desc) as 'Row_Num', I_RecId, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
+            Column="ROW_NUMBER() OVER(order by I_RecId desc) as 'Row_Num', I_RecId, I_UUID, I_TRecId, I_Name, I_Source, I_MadeIn, I_Amount, T_RecId, T_Name, T_SubName, "
                     +"I_Cost, I_Price, I_Total, I_RecDate, I_UpdateOrg";
         }
         if (Where.equals("")) {

@@ -72,7 +72,7 @@ public class ItemRestController {
         }
         return ResponseEntity
                 .status(httpStatus)
-                .body(new Message(ResultMsg, httpStatus, item.getIRecId()));
+                .body(new Message(ResultMsg, httpStatus, item.getIRecId(), item.getIUUID()));
     }
 
     @DeleteMapping("/item/delete/{I_RecId}")

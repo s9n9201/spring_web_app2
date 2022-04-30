@@ -14,6 +14,7 @@ public class ItemRowMapper implements RowMapper<Item> {
         ItemType itemType=new ItemType();
 
         item.setIRecId(rs.getInt("I_RecId"));
+        item.setIUUID(rs.getString("I_UUID"));
         item.setITRecId(rs.getInt("I_TRecId"));
         item.setIName(rs.getString("I_Name"));
         item.setISource(rs.getString("I_Source"));
