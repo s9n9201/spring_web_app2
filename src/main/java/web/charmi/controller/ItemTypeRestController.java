@@ -11,7 +11,8 @@ import web.charmi.service.ItemTypeService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(value="http://localhost:8080")
+//@CrossOrigin(value="http://localhost:8080")
+@CrossOrigin(origins="*", maxAge=3600)
 public class ItemTypeRestController {
     @Autowired
     private ItemTypeService itemTypeService;

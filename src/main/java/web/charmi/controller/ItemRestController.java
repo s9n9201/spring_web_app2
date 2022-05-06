@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(value="http://localhost:8080")
+//@CrossOrigin(value="http://localhost:8080")
+@CrossOrigin(origins="*", maxAge=3600)
 public class ItemRestController {
 
     private final static Logger log=LoggerFactory.getLogger(ItemRestController.class);

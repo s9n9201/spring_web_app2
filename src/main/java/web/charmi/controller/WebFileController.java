@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(value="http://localhost:8080")
+//@CrossOrigin(value="http://localhost:8080")
+@CrossOrigin(origins="*", maxAge=3600)
 public class WebFileController {
     @Autowired
     WebFileService webFileService;
