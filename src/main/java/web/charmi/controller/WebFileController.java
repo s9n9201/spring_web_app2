@@ -1,6 +1,7 @@
 package web.charmi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,12 @@ import java.util.stream.Collectors;
 public class WebFileController {
     @Autowired
     WebFileService webFileService;
+
+    @Value("${webcharmi.app.scheme}")
+    private String sheme;
+
+    @Value("${webcharmi.app.host}")
+    private String host;
 
     @PostMapping("/upload")
     //@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -54,11 +61,15 @@ public class WebFileController {
 
     @GetMapping("/files/{Module}/{FromUUID}")
     public ResponseEntity<List<FileInfo>> getFileList(@PathVariable String Module, @PathVariable String FromUUID) {
+        if (sheme.equals("https")) {
+            host=host+"/backend";
+        }
         List<FileInfo> fileInfoList=webFileService.getFileList(Module, FromUUID).map(path -> {
             String FileName=path.getFileName().toString();
             String UUIDName=path.getParent().getFileName().toString();
             String Url=MvcUriComponentsBuilder
-                    .fromMethodName(WebFileController.class, "getFile", UUIDName, FileName).build().toString();
+                    .fromMethodName(WebFileController.class, "getFile", UUIDName, FileName)
+                    .scheme(sheme).host(host).port(-1).build().toString();
             return new FileInfo(FileName, Url, 0);
         }).collect(Collectors.toList());
         return ResponseEntity.ok().body(fileInfoList);
