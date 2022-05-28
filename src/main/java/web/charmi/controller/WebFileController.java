@@ -61,15 +61,13 @@ public class WebFileController {
 
     @GetMapping("/files/{Module}/{FromUUID}")
     public ResponseEntity<List<FileInfo>> getFileList(@PathVariable String Module, @PathVariable String FromUUID) {
-        if (sheme.equals("https")) {
-            host=host+"/backend";
-        }
+        String MainHost=sheme.equals("https") ? host+"/backend" : host;
         List<FileInfo> fileInfoList=webFileService.getFileList(Module, FromUUID).map(path -> {
             String FileName=path.getFileName().toString();
             String UUIDName=path.getParent().getFileName().toString();
             String Url=MvcUriComponentsBuilder
                     .fromMethodName(WebFileController.class, "getFile", UUIDName, FileName)
-                    .scheme(sheme).host(host).port(-1).build().toString();
+                    .scheme(sheme).host(MainHost).port(-1).build().toString();
             return new FileInfo(FileName, Url, 0);
         }).collect(Collectors.toList());
         return ResponseEntity.ok().body(fileInfoList);
